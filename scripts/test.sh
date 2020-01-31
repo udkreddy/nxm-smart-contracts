@@ -41,8 +41,6 @@ else
   sleep 2
 fi
 if [ "$SOLIDITY_COVERAGE" = true ]; then
-  curl -o node_modules/solidity-parser-sc/build/parser.js  https://nexusmutual.io/js/parser.js
-  curl -o node_modules/solidity-coverage/lib/app.js https://nexusmutual.io/js/app.js
   sleep 2
   node_modules/.bin/solidity-coverage
   if [ "$CONTINUOUS_INTEGRATION" = true ]; then
