@@ -10,7 +10,7 @@ module.exports = {
       host: '127.0.0.1',
       network_id: '5777',
       port: 8555,
-      gas: 8000000,
+      gas: 0xfffffffffff,
       gasPrice: 0x01
     },
     ganache: {
@@ -22,7 +22,7 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.5.7',
+      version: '0.5.10',
       settings: {
         optimizer: {
           enabled: true,
@@ -30,5 +30,6 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  plugins: ['solidity-coverage']
 };
