@@ -7,7 +7,7 @@ const ClaimsReward = artifacts.require('ClaimsReward');
 const TokenController = artifacts.require('TokenController');
 const NXMToken = artifacts.require('NXMToken');
 const expectEvent = require('./utils/expectEvent');
-const { toWei, toHex } = require('./utils/ethTools.js');
+const {toWei, toHex} = require('./utils/ethTools.js');
 const gvProposal = require('./utils/gvProposal.js').gvProposal;
 const assertRevert = require('./utils/assertRevert.js').assertRevert;
 const increaseTime = require('./utils/increaseTime.js').increaseTime;
@@ -15,7 +15,7 @@ const encode = require('./utils/encoder.js').encode;
 const AdvisoryBoard = '0x41420000';
 const TokenFunctions = artifacts.require('TokenFunctionMock');
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8555'));
 
 let tf;
 let gv;
@@ -74,33 +74,33 @@ contract(
       // tc = await TokenController.deployed();
       pd = await PoolData.deployed();
       await mr.payJoiningFee(ab2, {
-            value: 2000000000000000,
-            from: ab2
-          });
-          await mr.kycVerdict(ab2, true, {
-            from: web3.eth.accounts[0]
-          });
-       await mr.payJoiningFee(ab3, {
-            value: 2000000000000000,
-            from: ab3
-          });
-          await mr.kycVerdict(ab3, true, {
-            from: web3.eth.accounts[0]
-          });
-        await mr.payJoiningFee(ab4, {
-            value: 2000000000000000,
-            from: ab4
-          });
-          await mr.kycVerdict(ab4, true, {
-            from: web3.eth.accounts[0]
-          });
-          await mr.payJoiningFee(ab5, {
-            value: 2000000000000000,
-            from: ab5
-          });
-          await mr.kycVerdict(ab5, true, {
-            from: web3.eth.accounts[0]
-          });
+        value: 2000000000000000,
+        from: ab2
+      });
+      await mr.kycVerdict(ab2, true, {
+        from: web3.eth.accounts[0]
+      });
+      await mr.payJoiningFee(ab3, {
+        value: 2000000000000000,
+        from: ab3
+      });
+      await mr.kycVerdict(ab3, true, {
+        from: web3.eth.accounts[0]
+      });
+      await mr.payJoiningFee(ab4, {
+        value: 2000000000000000,
+        from: ab4
+      });
+      await mr.kycVerdict(ab4, true, {
+        from: web3.eth.accounts[0]
+      });
+      await mr.payJoiningFee(ab5, {
+        value: 2000000000000000,
+        from: ab5
+      });
+      await mr.kycVerdict(ab5, true, {
+        from: web3.eth.accounts[0]
+      });
       await mr.addInitialABMembers([ab2, ab3, ab4, ab5]);
       await nxmToken.approve(tc.address, maxAllowance);
       let bal = await nxmToken.balanceOf(ab1);
@@ -152,15 +152,15 @@ contract(
         await nxmToken.transfer(web3.eth.accounts[i], toWei(balances[i]));
       }
       // await gv.delegateVote(ab1, { from: ab2 });
-      await gv.setDelegationStatus(true, { from: ab1 });
-      await gv.setDelegationStatus(true, { from: ab3 });
-      await gv.setDelegationStatus(true, { from: mem4 });
-      await gv.setDelegationStatus(true, { from: mem5 });
-      await gv.delegateVote(ab1, { from: mem1 });
-      await gv.delegateVote(ab1, { from: mem2 });
-      await gv.delegateVote(ab3, { from: mem3 });
-      await gv.delegateVote(mem4, { from: mem8 });
-      await gv.delegateVote(mem5, { from: mem6 });
+      await gv.setDelegationStatus(true, {from: ab1});
+      await gv.setDelegationStatus(true, {from: ab3});
+      await gv.setDelegationStatus(true, {from: mem4});
+      await gv.setDelegationStatus(true, {from: mem5});
+      await gv.delegateVote(ab1, {from: mem1});
+      await gv.delegateVote(ab1, {from: mem2});
+      await gv.delegateVote(ab3, {from: mem3});
+      await gv.delegateVote(mem4, {from: mem8});
+      await gv.delegateVote(mem5, {from: mem6});
       await increaseTime(604800);
     });
 
@@ -187,7 +187,7 @@ contract(
                   'Proposal1',
                   'Proposal1',
                   0,
-                  { from: mem1 }
+                  {from: mem1}
                 );
               });
               it('17.2 Should whitelist proposal and set Incentives', async function() {
@@ -198,7 +198,7 @@ contract(
                   pId,
                   'changes to pricing model',
                   '0x',
-                  { from: mem1 }
+                  {from: mem1}
                 );
                 // let proposalsStatus = await gv.getStatusOfProposals();
                 // assert.equal(proposalsStatus[3].toNumber(), 1);
@@ -206,20 +206,20 @@ contract(
                 assert.equal(action[1], null);
               });
               it('17.4 should follow voting process', async function() {
-                await gv.submitVote(pId, 1, { from: ab1 });
+                await gv.submitVote(pId, 1, {from: ab1});
                 let voteWeight = await gv.voteTallyData(pId, 1);
                 assert.equal(voteWeight[1].toNumber(), 1);
-                await gv.submitVote(pId, 1, { from: ab2 });
-                await gv.submitVote(pId, 1, { from: ab3 });
-                await gv.submitVote(pId, 1, { from: ab4 });
-                await gv.submitVote(pId, 1, { from: ab5 });
-                await gv.submitVote(pId, 0, { from: mem4 });
-                await gv.submitVote(pId, 0, { from: mem5 });
-                await gv.submitVote(pId, 1, { from: mem7 });
+                await gv.submitVote(pId, 1, {from: ab2});
+                await gv.submitVote(pId, 1, {from: ab3});
+                await gv.submitVote(pId, 1, {from: ab4});
+                await gv.submitVote(pId, 1, {from: ab5});
+                await gv.submitVote(pId, 0, {from: mem4});
+                await gv.submitVote(pId, 0, {from: mem5});
+                await gv.submitVote(pId, 1, {from: mem7});
               });
               it('17.5 Should not vote if cloing time of proposal is completed', async function() {
                 await increaseTime(604810);
-                await assertRevert(gv.submitVote(pId, 1, { from: mem9 }));
+                await assertRevert(gv.submitVote(pId, 1, {from: mem9}));
               });
               it('17.6 Should close vote', async function() {
                 await increaseTime(604800);
@@ -234,9 +234,9 @@ contract(
               it('17.8 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (
+                      await gv.getPendingReward(web3.eth.accounts[i])
+                    ).toString(),
                     toWei(10),
                     web3.eth.accounts[i] + "didn't get reward"
                   );
@@ -278,14 +278,14 @@ contract(
                 );
               });
               it('17.13 should follow voting process', async function() {
-                await gv.submitVote(pId, 1, { from: ab1 });
-                await gv.submitVote(pId, 1, { from: ab2 });
-                await gv.submitVote(pId, 1, { from: ab3 });
-                await gv.submitVote(pId, 1, { from: ab4 });
-                await gv.submitVote(pId, 1, { from: ab5 });
-                await gv.submitVote(pId, 0, { from: mem4 });
-                await gv.submitVote(pId, 0, { from: mem5 });
-                await gv.submitVote(pId, 1, { from: mem7 });
+                await gv.submitVote(pId, 1, {from: ab1});
+                await gv.submitVote(pId, 1, {from: ab2});
+                await gv.submitVote(pId, 1, {from: ab3});
+                await gv.submitVote(pId, 1, {from: ab4});
+                await gv.submitVote(pId, 1, {from: ab5});
+                await gv.submitVote(pId, 0, {from: mem4});
+                await gv.submitVote(pId, 0, {from: mem5});
+                await gv.submitVote(pId, 1, {from: mem7});
               });
               it('17.14 Should close vote', async function() {
                 await increaseTime(604800);
@@ -306,9 +306,9 @@ contract(
               it('17.17 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (
+                      await gv.getPendingReward(web3.eth.accounts[i])
+                    ).toString(),
                     toWei(10),
                     web3.eth.accounts[i] + "didn't get reward"
                   );
@@ -350,14 +350,14 @@ contract(
                 );
               });
               it('17.22 should follow voting process', async function() {
-                await gv.submitVote(pId, 1, { from: ab1 });
-                await gv.submitVote(pId, 1, { from: ab2 });
-                await gv.submitVote(pId, 1, { from: ab3 });
-                await gv.submitVote(pId, 1, { from: ab4 });
-                await gv.submitVote(pId, 1, { from: ab5 });
-                await gv.submitVote(pId, 0, { from: mem4 });
-                await gv.submitVote(pId, 0, { from: mem5 });
-                await gv.submitVote(pId, 1, { from: mem7 });
+                await gv.submitVote(pId, 1, {from: ab1});
+                await gv.submitVote(pId, 1, {from: ab2});
+                await gv.submitVote(pId, 1, {from: ab3});
+                await gv.submitVote(pId, 1, {from: ab4});
+                await gv.submitVote(pId, 1, {from: ab5});
+                await gv.submitVote(pId, 0, {from: mem4});
+                await gv.submitVote(pId, 0, {from: mem5});
+                await gv.submitVote(pId, 1, {from: mem7});
               });
               it('17.23 Should close vote', async function() {
                 await increaseTime(604800);
@@ -378,9 +378,9 @@ contract(
               it('17.26 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (
+                      await gv.getPendingReward(web3.eth.accounts[i])
+                    ).toString(),
                     toWei(10),
                     web3.eth.accounts[i] + "didn't get reward"
                   );
@@ -418,14 +418,14 @@ contract(
               );
             });
             it('17.31 should follow voting process', async function() {
-              await gv.submitVote(pId, 0, { from: ab1 });
-              await gv.submitVote(pId, 0, { from: ab2 });
-              await gv.submitVote(pId, 1, { from: ab3 });
-              await gv.submitVote(pId, 1, { from: ab4 });
-              await gv.submitVote(pId, 0, { from: ab5 });
-              await gv.submitVote(pId, 0, { from: mem4 });
-              await gv.submitVote(pId, 0, { from: mem5 });
-              await gv.submitVote(pId, 1, { from: mem7 });
+              await gv.submitVote(pId, 0, {from: ab1});
+              await gv.submitVote(pId, 0, {from: ab2});
+              await gv.submitVote(pId, 1, {from: ab3});
+              await gv.submitVote(pId, 1, {from: ab4});
+              await gv.submitVote(pId, 0, {from: ab5});
+              await gv.submitVote(pId, 0, {from: mem4});
+              await gv.submitVote(pId, 0, {from: mem5});
+              await gv.submitVote(pId, 1, {from: mem7});
             });
             it('17.32 Should close vote', async function() {
               await increaseTime(604800);
@@ -479,10 +479,10 @@ contract(
                   );
                 });
                 it('17.39 Should follow voting process', async function() {
-                  await gv.submitVote(pId, 1, { from: ab1 });
-                  await gv.submitVote(pId, 1, { from: ab2 });
-                  await gv.submitVote(pId, 1, { from: ab3 });
-                  await gv.submitVote(pId, 1, { from: mem7 });
+                  await gv.submitVote(pId, 1, {from: ab1});
+                  await gv.submitVote(pId, 1, {from: ab2});
+                  await gv.submitVote(pId, 1, {from: ab3});
+                  await gv.submitVote(pId, 1, {from: mem7});
                 });
                 it('17.40 Should close vote', async function() {
                   await increaseTime(604800);
@@ -504,7 +504,7 @@ contract(
                 });
                 it('17.43 Should claim rewards', async function() {
                   for (let i = 0; i < voters.length; i++) {
-                    await cr.claimAllPendingReward(20, { from: voters[i] });
+                    await cr.claimAllPendingReward(20, {from: voters[i]});
                   }
                 });
               });
@@ -538,11 +538,11 @@ contract(
                   );
                 });
                 it('17.47 should follow voting process', async function() {
-                  await gv.submitVote(pId, 1, { from: ab3 });
-                  await gv.submitVote(pId, 1, { from: ab4 });
-                  await gv.submitVote(pId, 1, { from: ab5 });
-                  await gv.submitVote(pId, 0, { from: mem5 });
-                  await gv.submitVote(pId, 0, { from: mem7 });
+                  await gv.submitVote(pId, 1, {from: ab3});
+                  await gv.submitVote(pId, 1, {from: ab4});
+                  await gv.submitVote(pId, 1, {from: ab5});
+                  await gv.submitVote(pId, 0, {from: mem5});
+                  await gv.submitVote(pId, 0, {from: mem7});
                 });
                 it('17.48 Should close vote', async function() {
                   await increaseTime(604800);
@@ -570,7 +570,7 @@ contract(
                 });
                 it('17.52 Should claim rewards', async function() {
                   for (let i = 0; i < voters.length; i++) {
-                    await cr.claimAllPendingReward(20, { from: voters[i] });
+                    await cr.claimAllPendingReward(20, {from: voters[i]});
                   }
                 });
               });
@@ -596,10 +596,10 @@ contract(
                 );
               });
               it('17.56 should follow voting process', async function() {
-                await gv.submitVote(pId, 1, { from: ab1 });
-                await gv.submitVote(pId, 1, { from: ab2 });
-                await gv.submitVote(pId, 1, { from: ab3 });
-                await gv.submitVote(pId, 1, { from: mem7 });
+                await gv.submitVote(pId, 1, {from: ab1});
+                await gv.submitVote(pId, 1, {from: ab2});
+                await gv.submitVote(pId, 1, {from: ab3});
+                await gv.submitVote(pId, 1, {from: mem7});
               });
               it('17.57 Should close vote', async function() {
                 await increaseTime(604800);
@@ -621,7 +621,7 @@ contract(
               });
               it('17.60 Should claim rewards', async function() {
                 for (let i = 0; i < voters.length; i++) {
-                  await cr.claimAllPendingReward(20, { from: voters[i] });
+                  await cr.claimAllPendingReward(20, {from: voters[i]});
                 }
               });
             });
@@ -672,8 +672,8 @@ contract(
       describe('And open for only AB vote.', function() {
         describe('If majority is reached', function() {
           it('17.67 Should create proposal', async function() {
-            await nxmToken.approve(tc.address, maxAllowance, { from: mem9 });
-            await tc.lock(CLA, toWei(500), validity, { from: mem9 });
+            await nxmToken.approve(tc.address, maxAllowance, {from: mem9});
+            await tc.lock(CLA, toWei(500), validity, {from: mem9});
             console.log(
               'Tokens locked for claims assessment - ' +
                 (await tc.tokensLocked(mem9, CLA))
@@ -699,12 +699,12 @@ contract(
             );
           });
           it('17.70 should follow voting process', async function() {
-            await gv.submitVote(pId, 1, { from: ab1 });
-            await gv.submitVote(pId, 1, { from: ab2 });
+            await gv.submitVote(pId, 1, {from: ab1});
+            await gv.submitVote(pId, 1, {from: ab2});
             assert.equal(await gv.canCloseProposal(pId), 0);
-            await gv.submitVote(pId, 0, { from: ab3 });
-            await gv.submitVote(pId, 1, { from: ab4 });
-            await gv.submitVote(pId, 1, { from: ab5 });
+            await gv.submitVote(pId, 0, {from: ab3});
+            await gv.submitVote(pId, 1, {from: ab4});
+            await gv.submitVote(pId, 1, {from: ab5});
           });
           it('17.71 Should close vote', async function() {
             await increaseTime(604800);
@@ -734,8 +734,8 @@ contract(
         });
         describe('If majority is not reached', function() {
           it('17.75 Should create proposal', async function() {
-            await nxmToken.approve(tc.address, maxAllowance, { from: mem9 });
-            await tc.lock(CLA, toWei(500), validity, { from: mem9 });
+            await nxmToken.approve(tc.address, maxAllowance, {from: mem9});
+            await tc.lock(CLA, toWei(500), validity, {from: mem9});
             console.log(
               'Tokens locked for claims assessment - ' +
                 (await tc.tokensLocked(mem9, CLA))
@@ -761,9 +761,9 @@ contract(
             );
           });
           it('17.78 Should follow voting process', async function() {
-            await gv.submitVote(pId, 1, { from: ab1 });
-            await gv.submitVote(pId, 1, { from: ab2 });
-            await gv.submitVote(pId, 0, { from: ab3 });
+            await gv.submitVote(pId, 1, {from: ab1});
+            await gv.submitVote(pId, 1, {from: ab2});
+            await gv.submitVote(pId, 0, {from: ab3});
           });
           it('17.79 Should close vote', async function() {
             await increaseTime(604800);
@@ -815,15 +815,15 @@ contract(
               16,
               'Swap AB Member',
               actionHash,
-              { from: mem1 }
+              {from: mem1}
             );
           });
           it('17.84 should follow voting process', async function() {
-            await gv.submitVote(pId, 1, { from: ab3 });
-            await gv.submitVote(pId, 1, { from: ab4 });
-            await gv.submitVote(pId, 1, { from: ab5 });
-            await gv.submitVote(pId, 1, { from: mem4 });
-            await gv.submitVote(pId, 0, { from: mem5 });
+            await gv.submitVote(pId, 1, {from: ab3});
+            await gv.submitVote(pId, 1, {from: ab4});
+            await gv.submitVote(pId, 1, {from: ab5});
+            await gv.submitVote(pId, 1, {from: mem4});
+            await gv.submitVote(pId, 0, {from: mem5});
           });
           it('17.85 Should close vote', async function() {
             await increaseTime(604800);
@@ -869,13 +869,13 @@ contract(
               16,
               'Swap AB Member',
               actionHash,
-              { from: mem1 }
+              {from: mem1}
             );
           });
           it('17.90 should follow voting process', async function() {
-            await gv.submitVote(pId, 1, { from: ab3 });
-            await gv.submitVote(pId, 1, { from: ab4 });
-            await gv.submitVote(pId, 1, { from: ab5 });
+            await gv.submitVote(pId, 1, {from: ab3});
+            await gv.submitVote(pId, 1, {from: ab4});
+            await gv.submitVote(pId, 1, {from: ab5});
           });
           it('17.91 Should close vote', async function() {
             await increaseTime(604800);
@@ -914,7 +914,7 @@ contract(
               16,
               'Swap AB Member',
               actionHash,
-              { from: mem1 }
+              {from: mem1}
             );
           });
           it('17.96 Should close vote', async function() {
@@ -955,17 +955,17 @@ contract(
               );
             });
             it('17.102 should follow voting process', async function() {
-              await gv.submitVote(pId, 1, { from: ab1 });
-              await gv.submitVote(pId, 1, { from: ab2 });
-              await gv.submitVote(pId, 1, { from: ab3 });
-              await gv.submitVote(pId, 1, { from: ab4 });
-              await gv.submitVote(pId, 1, { from: ab5 });
-              await gv.submitVote(pId, 1, { from: mem4 });
-              await gv.submitVote(pId, 1, { from: mem5 });
-              await gv.submitVote(pId, 1, { from: mem7 });
-              await gv.submitVote(pId, 1, { from: mem10 });
-              await gv.submitVote(pId, 1, { from: mem11 });
-              await gv.submitVote(pId, 1, { from: mem12 });
+              await gv.submitVote(pId, 1, {from: ab1});
+              await gv.submitVote(pId, 1, {from: ab2});
+              await gv.submitVote(pId, 1, {from: ab3});
+              await gv.submitVote(pId, 1, {from: ab4});
+              await gv.submitVote(pId, 1, {from: ab5});
+              await gv.submitVote(pId, 1, {from: mem4});
+              await gv.submitVote(pId, 1, {from: mem5});
+              await gv.submitVote(pId, 1, {from: mem7});
+              await gv.submitVote(pId, 1, {from: mem10});
+              await gv.submitVote(pId, 1, {from: mem11});
+              await gv.submitVote(pId, 1, {from: mem12});
             });
             it('17.103 Should close vote', async function() {
               await increaseTime(604800);
@@ -1008,11 +1008,11 @@ contract(
                 'For testing Special Resolution cases',
                 actionHash
               );
-              await gv.submitVote(pId, 1, { from: ab1 });
-              await gv.submitVote(pId, 1, { from: ab2 });
-              await gv.submitVote(pId, 1, { from: ab3 });
-              await gv.submitVote(pId, 1, { from: ab4 });
-              await gv.submitVote(pId, 1, { from: ab5 });
+              await gv.submitVote(pId, 1, {from: ab1});
+              await gv.submitVote(pId, 1, {from: ab2});
+              await gv.submitVote(pId, 1, {from: ab3});
+              await gv.submitVote(pId, 1, {from: ab4});
+              await gv.submitVote(pId, 1, {from: ab5});
               await gv.closeProposal(pId);
               assert.equal((await pc.totalCategories()).toNumber(), 34);
             });
@@ -1043,17 +1043,17 @@ contract(
               );
             });
             it('17.110 should follow voting process', async function() {
-              await gv.submitVote(pId, 1, { from: ab1 });
-              await gv.submitVote(pId, 1, { from: ab2 });
-              await gv.submitVote(pId, 1, { from: ab3 });
-              await gv.submitVote(pId, 1, { from: ab4 });
-              await gv.submitVote(pId, 1, { from: ab5 });
-              await gv.submitVote(pId, 1, { from: mem4 });
-              await gv.submitVote(pId, 1, { from: mem5 });
-              await gv.submitVote(pId, 1, { from: mem7 });
-              await gv.submitVote(pId, 1, { from: mem10 });
-              await gv.submitVote(pId, 1, { from: mem11 });
-              await gv.submitVote(pId, 1, { from: mem12 });
+              await gv.submitVote(pId, 1, {from: ab1});
+              await gv.submitVote(pId, 1, {from: ab2});
+              await gv.submitVote(pId, 1, {from: ab3});
+              await gv.submitVote(pId, 1, {from: ab4});
+              await gv.submitVote(pId, 1, {from: ab5});
+              await gv.submitVote(pId, 1, {from: mem4});
+              await gv.submitVote(pId, 1, {from: mem5});
+              await gv.submitVote(pId, 1, {from: mem7});
+              await gv.submitVote(pId, 1, {from: mem10});
+              await gv.submitVote(pId, 1, {from: mem11});
+              await gv.submitVote(pId, 1, {from: mem12});
             });
             it('17.111 Should close vote', async function() {
               await increaseTime(604800);
@@ -1086,16 +1086,16 @@ contract(
             );
           });
           it('17.116 should follow voting process', async function() {
-            await gv.submitVote(pId, 1, { from: ab1 });
-            await gv.submitVote(pId, 1, { from: ab2 });
-            await gv.submitVote(pId, 1, { from: ab3 });
-            await gv.submitVote(pId, 1, { from: ab4 });
-            await gv.submitVote(pId, 1, { from: ab5 });
-            await gv.submitVote(pId, 1, { from: mem4 });
-            await gv.submitVote(pId, 0, { from: mem5 });
-            await gv.submitVote(pId, 1, { from: mem7 });
-            await gv.submitVote(pId, 1, { from: mem10 });
-            await gv.submitVote(pId, 1, { from: mem11 });
+            await gv.submitVote(pId, 1, {from: ab1});
+            await gv.submitVote(pId, 1, {from: ab2});
+            await gv.submitVote(pId, 1, {from: ab3});
+            await gv.submitVote(pId, 1, {from: ab4});
+            await gv.submitVote(pId, 1, {from: ab5});
+            await gv.submitVote(pId, 1, {from: mem4});
+            await gv.submitVote(pId, 0, {from: mem5});
+            await gv.submitVote(pId, 1, {from: mem7});
+            await gv.submitVote(pId, 1, {from: mem10});
+            await gv.submitVote(pId, 1, {from: mem11});
           });
           it('17.117 Should close vote', async function() {
             await increaseTime(604800);
