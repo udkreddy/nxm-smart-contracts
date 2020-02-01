@@ -1,10 +1,10 @@
 module.exports = {
-  port: 8555,
-  norpc: true,
-  deepSkip: true,
-  compileCommand: '../node_modules/.bin/truffle compile',
-  testCommand:
-    'node --max-old-space-size=4096 ../node_modules/.bin/truffle test --network coverage',
-  skipFiles: ['imports', 'EventCaller.sol', 'dummyDaiFeed.sol', 'mocks'],
-  forceParse: ['imports/ERC1132', 'imports/govblocks-protocol', 'mocks']
+  skipFiles: ['external', 'EventCaller.sol', 'dummyDaiFeed.sol', 'mocks'],
+  providerOptions: {
+    default_balance_ether: 10000000000, // Extra zero, coverage consumes more gas
+    network_id: 5777,
+    mnemonic:
+      'grocery obvious wire insane limit weather parade parrot patrol stock blast ivory',
+    total_accounts: 30
+  }
 };
