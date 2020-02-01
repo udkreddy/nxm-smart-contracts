@@ -13,7 +13,7 @@ cleanup() {
   fi
 }
 
-ganache_port=8555
+ganache_port=8545
 
 ganache_running() {
   nc -z localhost "$ganache_port"
@@ -23,6 +23,14 @@ start_ganache() {
   node_modules/.bin/ganache-cli --gasLimit 8000000 -p "$ganache_port" -i 5777 -m "grocery obvious wire insane limit weather parade parrot patrol stock blast ivory" -a 30 -e 10000000 > /dev/null &
   ganache_pid=$!
 }
+
+if ganache_running; then
+  echo "Using existing ganache instance"
+else
+  echo "Starting our own ganache instance"
+  start_ganache
+  sleep 2
+fi
 
 if [ -d "node_modules/eth-lightwallet/node_modules/bitcore-lib" ]; then
     rm -r "node_modules/eth-lightwallet/node_modules/bitcore-lib"
@@ -39,13 +47,6 @@ if [ "$SOLIDITY_COVERAGE" = true ]; then
     cat coverage/lcov.info | node_modules/.bin/coveralls
   fi
 else
-  if ganache_running; then
-    echo "Using existing ganache instance"
-  else
-    echo "Starting our own ganache instance"
-    start_ganache
-    sleep 2
-  fi
   echo "Now let's test truffle"
   node_modules/.bin/truffle test "$@"
 fi
