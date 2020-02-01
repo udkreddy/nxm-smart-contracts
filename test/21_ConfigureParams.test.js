@@ -22,9 +22,9 @@ const encode = require('./utils/encoder.js').encode;
 const AdvisoryBoard = '0x41420000';
 const TokenFunctions = artifacts.require('TokenFunctionMock');
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); // Hardcoded development port
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8555')); // Hardcoded development port
 // const { toWei } = require('./utils/ethTools');
-const { toHex, toWei } = require('./utils/ethTools');
+const {toHex, toWei} = require('./utils/ethTools');
 
 let mcr;
 let tf;
@@ -50,11 +50,13 @@ let maxAllowance =
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const CLA = '0x434c41';
 const validity = 2592000;
+var accounts = [];
 
 contract(
   'Configure Global Parameters',
   ([ab1, mem1, mem2, mem3, notMember]) => {
     before(async function() {
+      accounts = [ab1, mem1, mem2, mem3, notMember];
       nxms = await NXMaster.deployed();
       tf = await TokenFunctions.deployed();
       cr = await ClaimsReward.deployed();
@@ -77,29 +79,29 @@ contract(
       await nxmToken.approve(tc.address, maxAllowance);
       // await pc.payMe({
       //     value:"10",
-      //     // from: web3.eth.accounts[1]
+      //     // from: accounts[1]
       //   });
       // let bal = await nxmToken.balanceOf(ab1);
       await nxmToken.approve(cr.address, maxAllowance, {
         from: ab1
       });
-      // await mr.kycVerdict(web3.eth.accounts[0], true, {
-      //   from: web3.eth.accounts[0]
+      // await mr.kycVerdict(accounts[0], true, {
+      //   from: accounts[0]
       // });
       // await nxmToken.transfer(notMember, 267600*1e18);
       let balances = ['15000', '15000', '15000', '15000'];
       for (let i = 1; i < 4; i++) {
         await nxmToken.approve(cr.address, maxAllowance, {
-          from: web3.eth.accounts[i]
+          from: accounts[i]
         });
-        await mr.payJoiningFee(web3.eth.accounts[i], {
+        await mr.payJoiningFee(accounts[i], {
           value: 2000000000000000,
-          from: web3.eth.accounts[i]
+          from: accounts[i]
         });
-        await mr.kycVerdict(web3.eth.accounts[i], true, {
+        await mr.kycVerdict(accounts[i], true, {
           from: ab1
         });
-        await nxmToken.transfer(web3.eth.accounts[i], toWei(balances[i]));
+        await nxmToken.transfer(accounts[i], toWei(balances[i]));
       }
     });
     async function updateParameter(
@@ -458,7 +460,7 @@ contract(
           'ASD',
           nxms,
           'address',
-          web3.eth.accounts[1]
+          accounts[1]
         );
       });
       it('Should not trigger action if null address is passed', async function() {
@@ -475,24 +477,10 @@ contract(
 
     describe('Update Owner Parameters', function() {
       it('Should update Multi sig Wallet Address', async function() {
-        await updateParameter(
-          28,
-          3,
-          'MSWALLET',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateParameter(28, 3, 'MSWALLET', nxms, 'owner', accounts[1]);
       });
       it('Should update MCR Notarise Address', async function() {
-        await updateParameter(
-          28,
-          3,
-          'MCRNOTA',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateParameter(28, 3, 'MCRNOTA', nxms, 'owner', accounts[1]);
       });
       it('Should updateDAI Feed Address', async function() {
         let newDai = await DAI.new();
@@ -510,44 +498,16 @@ contract(
         );
       });
       it('Should update Owner Address', async function() {
-        await updateParameter(
-          28,
-          3,
-          'OWNER',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateParameter(28, 3, 'OWNER', nxms, 'owner', accounts[1]);
       });
       it('Should update Quote Engine Address', async function() {
-        await updateParameter(
-          28,
-          3,
-          'QUOAUTH',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateParameter(28, 3, 'QUOAUTH', nxms, 'owner', accounts[1]);
       });
       it('Should update KYC Authorised Address', async function() {
-        await updateParameter(
-          28,
-          3,
-          'KYCAUTH',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateParameter(28, 3, 'KYCAUTH', nxms, 'owner', accounts[1]);
       });
       it('Should not trigger action if wrong code is passed', async function() {
-        await updateInvalidParameter(
-          28,
-          3,
-          'ASD',
-          nxms,
-          'owner',
-          web3.eth.accounts[1]
-        );
+        await updateInvalidParameter(28, 3, 'ASD', nxms, 'owner', accounts[1]);
       });
     });
   }
